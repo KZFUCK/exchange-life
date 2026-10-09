@@ -58,6 +58,19 @@ func run() -> void:
 	check(not m.valid(broken),"forged research balance rejected")
 	broken=s.duplicate(true);broken.ledger.append(broken.ledger.filter(func(e):return e.kind=="launch")[0].duplicate());broken.cash+=1980
 	check(not m.valid(broken),"duplicate release payment rejected")
+	# Fractional work hours near a scoring boundary must remain saveable.
+	var precise:Dictionary=m.initial()
+	m.starter_layout(precise,[[1,1],[2,1],[1,4],[2,4]])
+	for role in ["engineer","engineer","support","analyst"]:m.hire(precise,role)
+	m.commission(precise,0,1);m.begin(precise)
+	for i in range(80):m.tick(precise,.1)
+	check(m.valid(precise) and precise.development.history[0].score==82,"fractional project has its original valid 82-point result")
+	var precise_store=Store.new("/tmp/bnb-development-precision-%d.json"%OS.get_process_id())
+	check(precise_store.write_game(precise).is_empty(),"fractional released project saves without rounding into a different score")
+	var precise_loaded:Dictionary=precise_store.read_game()
+	check(precise_loaded.has("state"),"fractional released project reloads")
+	if precise_loaded.has("state"):
+		check(precise_loaded.state.cash==precise.cash and precise_loaded.state.development.history[0].score==82 and precise_loaded.state.development.users==precise.development.users,"save reload preserves score, users and earned cash")
 	# Existing v010 payload migrates only presentation/progression fields; cash and work stay exact.
 	var old=m.initial();old.erase("development")
 	var payload:=JSON.stringify(old);var f:=FileAccess.open(store.path+".legacy",FileAccess.WRITE)

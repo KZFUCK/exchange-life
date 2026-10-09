@@ -43,7 +43,7 @@ func read_game(source: String = "") -> Dictionary:
 func write_game(state: Dictionary) -> String:
 	if not model.valid(state):return "当前状态无效，未保存。"
 	if FileAccess.file_exists(path) and read_game().has("error"):return "已有存档损坏或不兼容，已保护原文件；可恢复备份。"
-	var payload:=JSON.stringify(state)
+	var payload:=JSON.stringify(state,"",true,true)
 	var data:={"version":1,"mode":"operations_v1","rules_hash":rules_hash,"payload":payload,"checksum":payload.sha256_text()}
 	var file:=FileAccess.open(path+".tmp",FileAccess.WRITE)
 	if file==null:return "不能写入存档。"
