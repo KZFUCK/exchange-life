@@ -1,0 +1,19 @@
+{
+  "starting_cash": 20000,
+  "week_hours": 8,
+  "walk_speed": 2,
+  "workstation_price": 800,
+  "workstation_resale_price": 400,
+  "hire_price": 600,
+  "batch_server_cost": 40,
+  "roles": [
+    {"id": "engineer", "name": "撮合工程师", "salary": 450, "cycle": 2, "revenue": 1400},
+    {"id": "analyst", "name": "市场分析员", "salary": 350, "cycle": 2.5, "revenue": 1250},
+    {"id": "support", "name": "客户服务员", "salary": 250, "cycle": 2.5, "revenue": 900}
+  ],
+  "offices": [
+    {"name": "起步办公室", "width": 8, "height": 7, "capacity": 4, "rent": 500, "upgrade_price": 0},
+    {"name": "成长办公室", "width": 11, "height": 9, "capacity": 8, "rent": 900, "upgrade_price": 3000},
+    {"name": "成熟办公室", "width": 14, "height": 11, "capacity": 12, "rent": 1400, "upgrade_price": 6000}
+  ]
+}

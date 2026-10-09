@@ -1,0 +1,4 @@
+.godot/
+saves/
+*.tmp
+qa/*.png

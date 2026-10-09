@@ -1,0 +1,82 @@
+{
+  "models": [
+    {
+      "asset": "bnb/assets/character_body_v009/resident_body_v009c.glb",
+      "asset_sha256": "e2a78ec2d96a341e67403d5c4987d4f51e8f4102b0750f22e7911836f11b01b6",
+      "blender_source": "art/blender/character_body_v009/resident_body_v009c.blend",
+      "blender_source_sha256": "7752da62cb167ee0161f28a436fe7fe9fa58093635a7bc092e19b4b72d63f54f"
+    },
+    {
+      "asset": "bnb/assets/office_decor_v011/boxes.glb",
+      "asset_sha256": "21b119eb0a6b1bdea5f202432243379abe9bd6a8b55a1fea84228878a68c1e11",
+      "blender_source": "art/blender/office_sample_v001/office_modular.blend",
+      "blender_source_sha256": "7a709a85d16485d3758edd82b85b79fc93aa8d3217f4b2e64d9aeda0f8083cc4"
+    },
+    {
+      "asset": "bnb/assets/office_decor_v011/coffeetable.glb",
+      "asset_sha256": "96c443617ccf955a2fd696fe4bc0aec199ee023ae8f367db7e0bbaaf5bd04cba",
+      "blender_source": "art/blender/office_sample_v001/office_modular.blend",
+      "blender_source_sha256": "7a709a85d16485d3758edd82b85b79fc93aa8d3217f4b2e64d9aeda0f8083cc4"
+    },
+    {
+      "asset": "bnb/assets/office_decor_v011/plant.glb",
+      "asset_sha256": "e3c6a047cd53886de6191b6fe6bcdce07ea4e9379be602bb00a3528dc8f000b8",
+      "blender_source": "art/blender/office_sample_v001/office_modular.blend",
+      "blender_source_sha256": "7a709a85d16485d3758edd82b85b79fc93aa8d3217f4b2e64d9aeda0f8083cc4"
+    },
+    {
+      "asset": "bnb/assets/office_decor_v011/printer.glb",
+      "asset_sha256": "0e16c289a70251221cfc5faac7355ef5bc4d658a50e22d8323f8acbc9568cdc5",
+      "blender_source": "art/blender/office_sample_v001/office_modular.blend",
+      "blender_source_sha256": "7a709a85d16485d3758edd82b85b79fc93aa8d3217f4b2e64d9aeda0f8083cc4"
+    },
+    {
+      "asset": "bnb/assets/office_decor_v011/server.glb",
+      "asset_sha256": "798868c113d91835e0502a2d2fe10c9a8a72e9ee2d1d65bc3984381e483e39e6",
+      "blender_source": "art/blender/office_sample_v001/office_modular.blend",
+      "blender_source_sha256": "7a709a85d16485d3758edd82b85b79fc93aa8d3217f4b2e64d9aeda0f8083cc4"
+    },
+    {
+      "asset": "bnb/assets/office_decor_v011/sofa.glb",
+      "asset_sha256": "411bd4dc67d912ab0335336d37325f3bbb6e7fd190b19339036921654b12868d",
+      "blender_source": "art/blender/office_sample_v001/office_modular.blend",
+      "blender_source_sha256": "7a709a85d16485d3758edd82b85b79fc93aa8d3217f4b2e64d9aeda0f8083cc4"
+    },
+    {
+      "asset": "bnb/assets/office_decor_v011/tallplant.glb",
+      "asset_sha256": "cf30568a5b25f2d505c31a0e5c6221f160a2c1a319b64e5e83d74c4f820daed0",
+      "blender_source": "art/blender/office_sample_v001/office_modular.blend",
+      "blender_source_sha256": "7a709a85d16485d3758edd82b85b79fc93aa8d3217f4b2e64d9aeda0f8083cc4"
+    },
+    {
+      "asset": "bnb/assets/office_furnishings_v012/entrance.glb",
+      "asset_sha256": "a34ee43e90f41734fddd81a95e53ee79e5b97e98088c696e56d1625377209322",
+      "blender_source": "art/blender/office_sample_v001/office_modular.blend",
+      "blender_source_sha256": "7a709a85d16485d3758edd82b85b79fc93aa8d3217f4b2e64d9aeda0f8083cc4"
+    },
+    {
+      "asset": "bnb/assets/office_furnishings_v012/sideboard.glb",
+      "asset_sha256": "9f3c2e981b38ba42af608d5083bd1dc3dd1b4b153770fcc60f3b11774c56ab31",
+      "blender_source": "art/blender/office_sample_v001/office_modular.blend",
+      "blender_source_sha256": "7a709a85d16485d3758edd82b85b79fc93aa8d3217f4b2e64d9aeda0f8083cc4"
+    },
+    {
+      "asset": "bnb/assets/office_furnishings_v012/whiteboard.glb",
+      "asset_sha256": "594991d300578d596e70753cbd8836a3f136e0f9477200380e84a5eb4e3ee3f9",
+      "blender_source": "art/blender/office_sample_v001/office_modular.blend",
+      "blender_source_sha256": "7a709a85d16485d3758edd82b85b79fc93aa8d3217f4b2e64d9aeda0f8083cc4"
+    },
+    {
+      "asset": "bnb/assets/office_light_v013/tile.glb",
+      "asset_sha256": "f5077107ce4ab30c2cdcfc46f6263a5ff3a56d3fd83f6f45e3af19103cc6b958",
+      "blender_source": "art/blender/office_visual_v002/sample_04.blend",
+      "blender_source_sha256": "2c1e9fc0e9defe0923942300040605f371e7148dfe7caa03831fae66cce3c387"
+    },
+    {
+      "asset": "bnb/assets/office_light_v013/window.glb",
+      "asset_sha256": "35d6838cd3723cd58d0766b4d73a2a9691f866adf718f061736ab4e781aa2f98",
+      "blender_source": "art/blender/office_visual_v002/sample_04.blend",
+      "blender_source_sha256": "2c1e9fc0e9defe0923942300040605f371e7148dfe7caa03831fae66cce3c387"
+    }
+  ]
+}
