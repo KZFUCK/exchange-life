@@ -1,0 +1,272 @@
+{
+  "version": 1,
+  "title": "做市商模拟器",
+  "subtitle": "流動性研修室 · BD TRAINING",
+  "parameter_notice": "金额、成本、SLA 与案例均为可编辑训练参数，不是公司正式报价政策。",
+  "questions": [
+    {
+      "id": "metrics",
+      "label": "你们如何衡量流动性质量？",
+      "topic": "验收指标"
+    },
+    {
+      "id": "funding",
+      "label": "可投入多少双边资金与代币库存？",
+      "topic": "资金安排"
+    },
+    {
+      "id": "ownership",
+      "label": "资产归属、授权和退出怎么约定？",
+      "topic": "服务边界"
+    },
+    {
+      "id": "budget",
+      "label": "预算、服务周期和采购流程是什么？",
+      "topic": "商业条件"
+    },
+    {
+      "id": "flow",
+      "label": "交易流与解锁／事件安排如何？",
+      "topic": "风险访谈"
+    },
+    {
+      "id": "venues",
+      "label": "覆盖哪些交易场所与响应时段？",
+      "topic": "交付范围"
+    }
+  ],
+  "cases": [
+    {
+      "id": "launch",
+      "name": "星见计划",
+      "subtitle": "新币上市 · 首次客户会谈",
+      "sector": "TOKEN LAUNCH",
+      "level": "01 / 入门",
+      "client": "陆悠 · 项目负责人",
+      "objective": "把“帮我们把币做好”转成可测量的流动性服务范围。",
+      "intro": "我们下周要上市，大家都很关心价格。你们做市以后，是不是就能让价格稳住？",
+      "price": 1.0,
+      "capital": 100000,
+      "depth": 15000,
+      "max_spread": 30,
+      "budget": 6500,
+      "cost_bps": 4,
+      "monthly_cost": 3200,
+      "objection": "那能不能写进合同：币价不跌，而且每天成交量至少一百万？",
+      "facts": {
+        "metrics": "希望双边报价，正常市场下价差不超过 30 bps，±1% 范围内每侧至少 15,000 USDT；应约定观测窗口和异常市场处理。",
+        "funding": "可提供 100,000 USDT 等值资产，初始为 USDT 与项目代币各半。服务费另行支付，不属于交易本金。",
+        "ownership": "客户保留资产权属。账户权限、授权交易范围、对账和退出返还必须单独约定，不接受 BD 口头兜底收益。",
+        "budget": "月度服务费预算 6,500 USDT，先试运行 30 天；采购负责人会审核服务范围。所有数值都是本案例训练参数。",
+        "flow": "上市首周买卖流不对称，第三个训练日有解锁卖压。预期成交量不等于可保证的交易量。",
+        "venues": "先覆盖一个现货交易场所，客户希望能看到报价覆盖率、异常事件说明及日度报告。"
+      },
+      "venues": 1,
+      "events": [
+        {
+          "title": "平稳启动",
+          "return": 0.018,
+          "flow": 0.5,
+          "toxic_bps": 1,
+          "outage": false
+        },
+        {
+          "title": "单边交易流",
+          "return": -0.012,
+          "flow": -0.7,
+          "toxic_bps": 2,
+          "outage": false
+        },
+        {
+          "title": "解锁与卖压",
+          "return": -0.09,
+          "flow": -1.5,
+          "toxic_bps": 12,
+          "outage": false
+        },
+        {
+          "title": "双边恢复",
+          "return": 0.025,
+          "flow": 0.8,
+          "toxic_bps": 3,
+          "outage": false
+        },
+        {
+          "title": "库存再平衡",
+          "return": -0.01,
+          "flow": -0.4,
+          "toxic_bps": 2,
+          "outage": false
+        },
+        {
+          "title": "交付复盘",
+          "return": 0.016,
+          "flow": 0.6,
+          "toxic_bps": 1,
+          "outage": false
+        }
+      ]
+    },
+    {
+      "id": "growth",
+      "name": "白鲸协议",
+      "subtitle": "成熟项目 · 服务扩容谈判",
+      "sector": "GROWTH MANDATE",
+      "level": "02 / 进阶",
+      "client": "陆悠 · 业务负责人",
+      "objective": "在更窄价差、多场所覆盖与有限预算间形成可交付的方案。",
+      "intro": "我们已经有做市服务了，想换一家更积极的团队。两家交易所同时做到很窄价差，费用还能降一点吗？",
+      "price": 2.5,
+      "capital": 180000,
+      "depth": 25000,
+      "max_spread": 22,
+      "budget": 8000,
+      "cost_bps": 6,
+      "monthly_cost": 4600,
+      "objection": "另一家说可以刷出漂亮的成交量。你们能不能也承诺一个排名，费用先打七折？",
+      "facts": {
+        "metrics": "目标是正常市场价差不超过 22 bps，±1% 每侧 25,000 USDT，分场所统计；不能用虚假成交量当验收指标。",
+        "funding": "可投入 180,000 USDT 等值客户资产，双边各半。两个场所会分散可用库存，不能把总资本重复承诺。",
+        "ownership": "需要逐场所账户权限、资金归属、每日对账、异常暂停授权与到期退出安排。",
+        "budget": "预算上限 8,000 USDT/月，内部需要清楚的服务范围和费用拆分。未经审批不能以成交额或涨幅对外兜底。",
+        "flow": "两侧需求经常偏向同一方向，资金再平衡与场所成本会影响有效深度。",
+        "venues": "覆盖两个现货场所，报价深度按每场所每侧计算；服务中断和通信要求需要写清。"
+      },
+      "venues": 2,
+      "events": [
+        {
+          "title": "正常报价",
+          "return": 0.012,
+          "flow": 0.6,
+          "toxic_bps": 2,
+          "outage": false
+        },
+        {
+          "title": "需求放大",
+          "return": 0.025,
+          "flow": 1.0,
+          "toxic_bps": 3,
+          "outage": false
+        },
+        {
+          "title": "场所状态变化",
+          "return": -0.018,
+          "flow": -0.7,
+          "toxic_bps": 4,
+          "outage": false
+        },
+        {
+          "title": "波动放大",
+          "return": 0.065,
+          "flow": 1.3,
+          "toxic_bps": 10,
+          "outage": false
+        },
+        {
+          "title": "再平衡",
+          "return": -0.02,
+          "flow": -0.9,
+          "toxic_bps": 4,
+          "outage": false
+        },
+        {
+          "title": "客户验收",
+          "return": 0.008,
+          "flow": 0.5,
+          "toxic_bps": 2,
+          "outage": false
+        }
+      ]
+    },
+    {
+      "id": "stress",
+      "name": "月白网络",
+      "subtitle": "波动市场 · 客户危机沟通",
+      "sector": "STRESS RESPONSE",
+      "level": "03 / 挑战",
+      "client": "陆悠 · 财务负责人",
+      "objective": "把风控暂停、客户通知和恢复条件纳入商业交付，而不是承诺无限接盘。",
+      "intro": "我们刚经历了一轮大跌，想找一家能一直报价的团队。如果再跌，你们能帮我们接住卖盘吗？",
+      "price": 0.8,
+      "capital": 150000,
+      "depth": 20000,
+      "max_spread": 40,
+      "budget": 9500,
+      "cost_bps": 8,
+      "monthly_cost": 5000,
+      "objection": "我只接受全天在线，极端行情也不能撤单。发生亏损的话你们赔偿，可以吗？",
+      "facts": {
+        "metrics": "正常市场下价差不超过 40 bps、±1% 每侧 20,000 USDT；极端行情、接口故障的免责窗口和恢复条件必须明确。",
+        "funding": "客户可提供 150,000 USDT 等值资产，但并未授权无限追加资金；需要库存和敞口限制。",
+        "ownership": "要求客户资金不混用、每日对账。暂停授权、恢复审批、退出返还和责任边界必须列入方案。",
+        "budget": "月度预算上限 9,500 USDT。客户需要升级通知机制，不能把“全天支持”误解为任何状态都必须挂单。",
+        "flow": "训练中有 18% 的单日下跌与流动性冲击；随后会出现交易接口故障，需要逐级处理。",
+        "venues": "一个现货场所，指定事故联系人。出现故障时应暂停受影响报价、核对状态并通知客户，再按恢复条件重启。"
+      },
+      "venues": 1,
+      "events": [
+        {
+          "title": "正常报价",
+          "return": -0.02,
+          "flow": -0.5,
+          "toxic_bps": 3,
+          "outage": false
+        },
+        {
+          "title": "需求放大",
+          "return": -0.18,
+          "flow": -1.8,
+          "toxic_bps": 18,
+          "outage": false
+        },
+        {
+          "title": "场所状态变化",
+          "return": 0.04,
+          "flow": 0.7,
+          "toxic_bps": 4,
+          "outage": true
+        },
+        {
+          "title": "波动放大",
+          "return": -0.06,
+          "flow": -1.1,
+          "toxic_bps": 8,
+          "outage": false
+        },
+        {
+          "title": "再平衡",
+          "return": 0.03,
+          "flow": 0.6,
+          "toxic_bps": 3,
+          "outage": false
+        },
+        {
+          "title": "客户验收",
+          "return": 0.012,
+          "flow": 0.4,
+          "toxic_bps": 2,
+          "outage": false
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Coinbase · What is an order book?",
+      "url": "https://www.coinbase.com/en-de/learn/advanced-trading/what-is-an-order-book",
+      "purpose": "双边报价、买卖价差和订单簿概念"
+    },
+    {
+      "title": "Kraken · Market Integrity",
+      "url": "https://www.kraken.com/compliance/market-integrity",
+      "purpose": "虚假成交、非真实订单与市场诚信边界"
+    }
+  ],
+  "scoring": {
+    "discovery": 20,
+    "proposal": 25,
+    "boundaries": 25,
+    "delivery": 20,
+    "communication": 10
+  }
+}

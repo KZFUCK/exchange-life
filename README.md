@@ -1,43 +1,50 @@
-# 交易所人生 · Exchange Life
+# 做市商模拟器 · Market Maker Academy
 
-开发中的 Godot 3D 办公室经营游戏。管理员工、摆放工位、开发产品并扩大办公室。当前可玩原型包含四人、八人和十二人规模；完整玩法与最终画面仍待验收。
+面向加密资产做市服务 BD 的日系动漫培训模拟器。原创人物立绘与交易工作室场景，配合客户会谈、方案报价、谈判、模拟交付和带教复盘。当前版本为离线、虚构客户案例的培训首版。
 
-## 获取与运行
+## 运行
 
-需要 Git、Git LFS 与 Godot 4.7.2。Mac 默认入口使用 Metal，另有 GL Compatibility 入口。
-
-```sh
-git lfs install
-git clone https://github.com/KZFUCK/exchange-life.git
-cd exchange-life
-git lfs pull
-```
-
-在 Godot 中打开 `bnb/project.godot`，等待首次素材导入后按 F5。Mac 也可双击 `启动游戏.command` 或 `启动游戏_兼容模式.command`。脚本支持 `GODOT_BIN`，项目本地 Godot、`/Applications/Godot.app`、用户 Applications 目录和 PATH 中的 `godot`。
+需要 Godot 4.7.2。编辑器打开 `bnb/project.godot`，首次等待素材导入后按 F5。Mac 双击 `启动做市商模拟器.command`；原 `启动游戏.command` 同样进入新版本。GL Compatibility 可使用 `启动游戏_兼容模式.command`。
 
 ```sh
-GODOT_BIN=/Applications/Godot.app/Contents/MacOS/Godot ./启动游戏.command
+GODOT_BIN=/Applications/Godot.app/Contents/MacOS/Godot ./启动做市商模拟器.command
 ```
 
-运行无需 Blender；编辑原生模型需要 Blender 4.5 LTS。
+从 Git 获取资源需先安装 Git LFS，再运行 `git lfs install` 与 `git lfs pull`。旧经营游戏源码和 `scenes/operations.tscn` 保留；本次更改在 `market-maker-bd` 分支。研修存档使用新模式和新应用数据目录，不覆盖旧公司进度。
 
-## 当前内容
+## 培训流程
 
-- 常驻 3D 办公室：独立员工寻路、到岗打字、岗位桌面、共享区与原生窗光。
-- 经营操作：招聘、配岗、买桌、摆放、移动、出售和办公室扩张。
-- 项目循环：产品与目标用户选择、企划、开发、测试、上线评价与销售、研发点培养及解锁。
-- 营业暂停与速度控制、周报、独立公司存档、有效备份与确认恢复。
+1. **需求会谈**：问清验收指标、资金与库存、资产权属、商业预算、交易流和场所覆盖。前三项缺失时不能报价。
+2. **方案工坊**：配置价差、每场所每侧 ±1% 深度、客户授权资金、服务费、场所数量与风险方案。双边资金不能重复承诺，保留 20% 示例风险缓冲。
+3. **客户谈判**：解释服务边界；不合理价格、交易量或损失兜底承诺需要返工。超预算、覆盖不足或超过目标价差的方案退回修改。
+4. **交付观察**：六个训练日逐步处理交易流、价格冲击与接口故障。可以继续报价、放宽价差并再平衡，或暂停核查，同时决定是否通知客户。
+5. **带教复盘**：需求、方案、边界、交付与沟通五维练习分，附完整决策记录；导出本地 Markdown 复盘。
 
-代码在 `bnb/scripts/`，场景在 `bnb/scenes/`，运行规则在 `bnb/data/operations_v1.json`。当前 13 个 GLB 模型及其导入设置在 `bnb/assets/`；对应三个 Blender 源文件在 `art/blender/`，来源对应与 SHA-256 见 `bnb/assets/SOURCES.json`。
+三份客户委托：**星见计划**（上市初谈）、**白鲸协议**（多场所扩容）、**月白网络**（极端行情与事故沟通）。
 
-本公开仓库只包含当前游戏源码、必需插件、运行模型素材和对应原生源文件。历史制作记录、参考图、测试截图/日志、方案和数值工作簿、个人存档、安装包及引擎缓存未纳入。
+## 模拟定义
+
+- bps 价差 = `(Ask − Bid) / Mid × 10000`；深度在中间价 ±1% 内按每场所、每侧统计。
+- 三档订单簿按价格顺序计算加权成交，深度不足只部分成交；可观察 10,000 USDT 示例买入的均价和滑点。
+- 客户资产市值 = USDT 余额 + 代币数量 × 中间价。自然交易流与固定情景价格路径只用于教学。
+- 成本包含示例交易成本、逆向选择估算和按中间价/3 bps 示例成本再平衡。模型省略真实队列、延迟、隐藏流动性、融资及跨场所转账，不预测实盘收益。
+- 月度服务毛利与客户资产盯市变化分开，六个训练日不等同于一个实际服务月。
+- 练习分用于带教讨论，不作为公司的正式员工考核或交易收益证明。
+
+## 公司内容配置
+
+`bnb/data/mm_bd_cases_v1.json` 集中保存案例需求、资金、预算、成本、情景与来源。修改案例配置会使用新的训练档案，原配置的档案保留。当前案例、金额和条件全部是训练示例；正式培训前由公司业务、交易和风控负责人核对真实服务边界及 SOP。不要把客户真实信息或内部报价政策公开提交到仓库。
+
+源文件：`mm_bd_model.gd`、`mm_bd_store.gd`、`mm_bd_main.gd`、`mm_bd_chart.gd`。新场景：`scenes/mm_bd.tscn`。原创 imagegen 素材和完整提示词在 `assets/mm_anime/`。
 
 ## 验证
 
 ```sh
 godot --headless --editor --path bnb --quit
-godot --headless --path bnb --script tests/operations_runner.gd
-godot --headless --path bnb --script tests/development_runner.gd
+godot --headless --path bnb --script tests/mm_bd_model_runner.gd
+./启动做市商模拟器.command --script tests/mm_bd_ui_runner.gd
 ```
 
-这些检查覆盖当前经营规则和存档契约，不表示玩法平衡、完整战役或画质已通过玩家验收。界面操作见 [bnb/README.md](bnb/README.md)，第三方许可见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+验证包含三案例完成、报价单位与资金约束、逐档成交、风险事件、评分读档一致性、鼠标操作、导出和小屏布局。测试结果与制作记录只保留在本地 `bnb/qa/mm_bd/`。第三方内容许可见 `THIRD_PARTY_NOTICES.md`。
+
+参考：[Coinbase · Order book](https://www.coinbase.com/en-de/learn/advanced-trading/what-is-an-order-book)、[Kraken · Market Integrity](https://www.kraken.com/compliance/market-integrity)。

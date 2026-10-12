@@ -85,3 +85,7 @@ dist/
 !/bnb/tests/operations_runner.gd*
 !/bnb/tests/development_runner.gd*
 !/bnb/tests/renderer_entry_smoke.gd*
+
+# Current BD training source and original anime assets
+!/bnb/assets/mm_anime/
+!/bnb/tests/mm_bd_*.gd*

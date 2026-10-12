@@ -1,0 +1,13 @@
+{
+  "method": "built-in imagegen",
+  "assets": [
+    {
+      "file": "characters_v1.png",
+      "prompt": "Use case: illustration-story. Asset type: one production sprite atlas for an original Japanese anime-style crypto market-making BD training game. Create ONE wide character sheet, 1536x1024 composition, with exactly THREE adult professional characters standing in three equal-width columns, each separated by generous transparent space. Left third: friendly female BD mentor, age 28, long dark indigo hair with small teal hair clip, cream tailored jacket and navy blouse, holding a tablet at waist, confident gentle smile. Middle third: male token-project founder, age 32, short chestnut hair, slate-blue relaxed suit, thoughtful expression, one hand near chin. Right third: female trading/risk lead, age 30, short silver-blue bob, round thin glasses, charcoal vest over ivory shirt, reserved calm expression, holding a slim notebook. All waist-up or upper-thigh portraits, full heads/hair/hands visible, same scale and baseline; no overlapping columns. Original contemporary Japanese visual-novel character art, refined anime faces and anatomy, clean ink contours, beautiful soft cel shading, subtle blue and lilac highlights, elegant and approachable for corporate learners. True transparent background, no scene/background, no borders, NO text, NO logos, NO watermark, not chibi, no weapons. Keep each character inside their own third so the image can be used as an in-game portrait atlas without manual retouching."
+    },
+    {
+      "file": "studio_v1.png",
+      "prompt": "Use case: illustration-story. Asset type: one wide background painting for an original Japanese anime visual-novel corporate training game about crypto liquidity services. Create a polished 16:9 daytime trading studio in a modern Japanese city: floor-to-ceiling windows, distant soft Tokyo-inspired skyline, contemporary light-oak desks with understated monitors displaying abstract tiny teal/coral bid-ask charts with NO readable text, books, a single pale blossom branch in a ceramic vase, a few green plants. Beautiful original Japanese animation background painting, clean architectural linework, soft hand-painted cel-style color, luminous overcast daylight, warm ivory and muted periwinkle/teal palette. Camera from the side of a tidy meeting room, calm and professional yet game-like, no people. Keep left third fairly quiet with pale wall or desk area so UI text/cards can sit above it; windows and desks in right two thirds. No text, no logos, no numbers, no watermark, no HUD or UI, no photorealism."
+    }
+  ]
+}
