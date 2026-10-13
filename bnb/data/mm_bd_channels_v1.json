@@ -1,0 +1,347 @@
+{
+  "version": 1,
+  "reviewed_at": "2026-10-13",
+  "notice": "四渠道机制课与情景测验。示例数值可编辑，不代表公司报价、平台当前费率或完整交易执行。",
+  "modules": [
+    {
+      "id": "uniswap",
+      "title": "Uniswap · 链上流动性",
+      "tag": "DEX / LP",
+      "summary": "区分 v2、v3 与 v4，向客户解释资金区间、资产变化和链上执行成本。",
+      "lessons": [
+        {
+          "title": "资金放在哪里",
+          "text": "v2 使用全范围恒定乘积池；v3 可指定价格区间。v4 延续集中流动性并允许 hooks 改变池行为，需确认具体版本、池地址和 hook。"
+        },
+        {
+          "title": "区间外会发生什么",
+          "text": "价格离开区间后，该头寸不再提供活跃流动性，资产会偏向单一币种。窄区间资金利用更集中，同时更容易需要调整。"
+        },
+        {
+          "title": "收益如何拆分",
+          "text": "手续费收入、相对持币的资产差额、gas 和再平衡成本分别解释。实验只计算固定区间头寸与持币的差额，不假定手续费能补足损失。"
+        },
+        {
+          "title": "链上交付",
+          "text": "确认链、合约与池地址、钱包授权、资金权属、调整权限和退出流程；观察实际成交滑点和确认状态，排查 MEV、合约及 hook 风险。"
+        }
+      ],
+      "discovery": [
+        "哪条链、哪个版本、哪个池与 token 地址？",
+        "价格区间、资金预算、调整频率和 gas 由谁批准？",
+        "报告按 TVL、有效区间、交易规模滑点还是净资产变化验收？"
+      ],
+      "boundary": "不能把 TVL 等同于某笔交易的可用深度；不能保证手续费收益、币价或零损失。钱包签名与资金操作由正式授权流程处理。",
+      "quiz": [
+        {
+          "prompt": "客户说：“窄区间一定更赚钱，对吗？”",
+          "options": [
+            "是，资金效率高就保证利润",
+            "解释出区间、相对持币差额及调整成本",
+            "只要 TVL 大就没有损失"
+          ],
+          "correct": 1,
+          "explanation": "资金效率与净收益不是同一指标。固定区间可能出区间，手续费还需覆盖资产差额和执行成本。"
+        },
+        {
+          "prompt": "价格涨到所选上界之外，头寸怎样变化？",
+          "options": [
+            "继续在所有价格提供同样深度",
+            "自动恢复最初 50/50 配比",
+            "变为单侧资产，该区间头寸不再活跃"
+          ],
+          "correct": 2,
+          "explanation": "在基本集中流动性模型中，上界之外头寸为报价资产；不会自动移动区间。"
+        },
+        {
+          "prompt": "客户要“Uniswap v4 做市”，首先确认什么？",
+          "options": [
+            "池地址、链、费率及 hook 行为与审查",
+            "照搬所有 v3 池的资金方案",
+            "只需查看代币名称"
+          ],
+          "correct": 0,
+          "explanation": "v4 的 hook 可改变行为。池与 token 身份、版本和权限必须先确认。"
+        },
+        {
+          "prompt": "客户想把 TVL 写成“10 万 USDT 买单零滑点”的保证。你会？",
+          "options": [
+            "直接接受，TVL 就是深度",
+            "改成明确交易规模、池与观测条件下的执行指标",
+            "提高服务费后保证零滑点"
+          ],
+          "correct": 1,
+          "explanation": "TVL 无法直接保证单笔执行结果。先测有效流动性和价格冲击，再约定可交付指标。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Uniswap · Concentrated Liquidity",
+          "url": "https://developers.uniswap.org/docs/get-started/concepts/liquidity-providers/concentrated-liquidity"
+        },
+        {
+          "title": "Uniswap · LP Calculations",
+          "url": "https://developers.uniswap.org/docs/get-started/concepts/liquidity-providers/lp-calculations"
+        },
+        {
+          "title": "Uniswap · v4 Architecture",
+          "url": "https://developers.uniswap.org/docs/protocols/v4/concepts/architecture"
+        },
+        {
+          "title": "Uniswap · Impermanent Loss",
+          "url": "https://support.uniswap.org/hc/en-us/articles/20904453751693-What-is-Impermanent-Loss"
+        }
+      ]
+    },
+    {
+      "id": "alpha",
+      "title": "币安 Alpha · 渠道沟通",
+      "tag": "ALPHA / ON-CHAIN",
+      "summary": "区分 Alpha 展示、Alpha 2.0 链上交易和正式现货上市，练习执行与客户预期管理。",
+      "lessons": [
+        {
+          "title": "渠道身份",
+          "text": "Alpha 展示早期项目；Alpha 2.0 在交易所界面接入链上交易。出现在 Alpha 不等于已正式上线币安现货，也不保证未来上市。"
+        },
+        {
+          "title": "两种订单不能混讲",
+          "text": "即时交易要核对报价、最低接收数量和处理状态；Alpha 2.0 限价单还涉及其自己的执行及自成交防护规则。不要套用普通现货连续订单簿假设。"
+        },
+        {
+          "title": "成本与失败",
+          "text": "核对实际订单类型、手续费、网络成本和到账数量。页面报价到链上执行可能变化，最低接收保护不能保证成交。下方实验为通用报价保护示例，不复制平台执行算法。"
+        },
+        {
+          "title": "客户期待与变动",
+          "text": "不要承诺 Alpha 入选、活动资格、积分、空投、收益或正式上市。产品可用性和条款会变化，服务交付前核对官方规则及账户实际权限。"
+        }
+      ],
+      "discovery": [
+        "客户说的 Alpha 是钱包入口、Alpha 2.0 还是正式现货？",
+        "目标链、代币地址、订单类型、到账状态与成本如何核实？",
+        "目标是流动性服务还是入选、活动或上市预期？由谁确认权限？"
+      ],
+      "boundary": "公司只能报价已获授权且具备交付能力的服务。渠道准入、上市与活动奖励不由 BD 保证；不可通过自成交或虚假交易制造活跃度。",
+      "quiz": [
+        {
+          "prompt": "客户说：“上了 Alpha，就能保证上币安现货吧？”",
+          "options": [
+            "不能保证；区分渠道展示与正式现货上市",
+            "可以保证，只差时间",
+            "承诺保密的上市日期"
+          ],
+          "correct": 0,
+          "explanation": "Alpha 展示与正式现货上市不同。官方明确说明未来上市不保证。"
+        },
+        {
+          "prompt": "界面在币安内，执行机制就一定是普通现货订单簿吗？",
+          "options": [
+            "一定相同",
+            "不一定；核对 Alpha 链上执行与订单类型",
+            "只看币安标识即可"
+          ],
+          "correct": 1,
+          "explanation": "Alpha 2.0 接入链上市场，限价和即时订单的规则需分别确认。"
+        },
+        {
+          "prompt": "预计到账数量低于保护下限时，应该怎样解释？",
+          "options": [
+            "自动扩大容忍度确保成交",
+            "承诺一定到账",
+            "可能执行失败；核对状态与规则，不擅自扩大授权"
+          ],
+          "correct": 2,
+          "explanation": "最低接收保护约束可接受的结果，并不保证成交。先核对处理或失败状态。"
+        },
+        {
+          "prompt": "客户要求通过关联账户互买互卖获取活跃度和奖励。你会？",
+          "options": [
+            "作为增值服务出售",
+            "拒绝虚假成交，改谈真实执行质量与服务范围",
+            "只要小额就可以"
+          ],
+          "correct": 1,
+          "explanation": "自成交防护与真实流动性交付不能绕开；活动资格和奖励也不能对外保证。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Binance · Alpha 2.0",
+          "url": "https://www.binance.com/en-NG/support/faq/detail/60cc2e54aa32453387523c10254438c1"
+        },
+        {
+          "title": "Binance · Alpha Limit Order STP",
+          "url": "https://www.binance.com/en-NG/support/faq/detail/ec8b2e5ce7fa4d7b9f29152de851967b"
+        }
+      ]
+    },
+    {
+      "id": "spot",
+      "title": "交易所现货 · 双边报价",
+      "tag": "CEX / SPOT",
+      "summary": "把价差、有效深度、成交滑点和库存管理变成可验收的服务。",
+      "lessons": [
+        {
+          "title": "报价与成交分开",
+          "text": "买卖限价单形成订单簿。价差是最好卖价减最好买价，挂单深度并非已成交量。市价单会消耗多档流动性。"
+        },
+        {
+          "title": "限价与市价的取舍",
+          "text": "限价单约束价格，但可能不成交；市价单优先执行，但受滑点和深度影响。是否属于 maker/taker 要看实际成交方式与场所规则。"
+        },
+        {
+          "title": "资金与库存",
+          "text": "客户资金在每个场所逐侧分配，不能重复承诺深度。单边流使库存偏移，调整范围和暂停恢复权限要事先约定。"
+        },
+        {
+          "title": "商业交付",
+          "text": "分别约定价差、±1% 每侧深度、覆盖率、观测窗口和故障处理；交易本金、资产损益、交易成本与服务费分别报告。"
+        }
+      ],
+      "discovery": [
+        "目标交易对与场所有哪些，逐场所各侧资金是多少？",
+        "价差、深度、覆盖率按哪个窗口和行情条件验收？",
+        "账户/API 权限、撤单、限额、暂停、对账与退出如何授权？"
+      ],
+      "boundary": "不承诺价格、自然成交量、收益或排名；不混用资金、不刷量。完整客户访谈与六日交付练习保留在研修主页三个案例中。",
+      "quiz": [
+        {
+          "prompt": "两家场所各需双边每侧 2 万 USDT，最低挂单占用合计？",
+          "options": [
+            "2 万",
+            "4 万",
+            "8 万"
+          ],
+          "correct": 2,
+          "explanation": "2 个场所 × 2 侧 × 20,000 = 80,000 USDT；还需额外风险缓冲。"
+        },
+        {
+          "prompt": "客户说：“挂了 10 万买单，就是成交了 10 万吧？”",
+          "options": [
+            "是，挂单就算成交",
+            "不是；分别记录挂单深度与真实成交额",
+            "只要截图就能算成交"
+          ],
+          "correct": 1,
+          "explanation": "订单簿记录当前挂单，成交记录才表明实际撮合。"
+        },
+        {
+          "prompt": "首档仅能满足一半买单，你如何解释？",
+          "options": [
+            "剩余可能吃更贵档位，均价与滑点上升",
+            "所有数量都能按首档成交",
+            "交易所保证不会滑点"
+          ],
+          "correct": 0,
+          "explanation": "成交均价按各档成交数量加权，深度不足还可能只能部分成交。"
+        },
+        {
+          "prompt": "客户要正常与极端行情都固定窄价差。你会？",
+          "options": [
+            "不计库存继续接盘",
+            "换成口头无限兜底",
+            "约定正常指标、限额、异常窗口和恢复条件"
+          ],
+          "correct": 2,
+          "explanation": "方案需同时明确正常交付和异常处置，不能把支持时段等同无限报价义务。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Coinbase · Order book",
+          "url": "https://www.coinbase.com/en-de/learn/advanced-trading/what-is-an-order-book"
+        },
+        {
+          "title": "Kraken · Market Integrity",
+          "url": "https://www.kraken.com/compliance/market-integrity"
+        }
+      ]
+    },
+    {
+      "id": "futures",
+      "title": "交易所合约 · 对冲与保证金",
+      "tag": "CEX / DERIVATIVES",
+      "summary": "以 USDT 线性永续为计算练习，区分合约做市与现货对冲，说明资金费率和强平风险。",
+      "lessons": [
+        {
+          "title": "先确认合约规格",
+          "text": "区分现货、永续和交割合约；确认线性或反向、乘数、结算资产、杠杆及账户模式。下方只算 USDT 线性永续，不用于币本位反向或组合保证金。"
+        },
+        {
+          "title": "资金费率",
+          "text": "永续的资金费率通常为多空间现金流；正费率时多方付空方，负费率相反。结算频率和费率会变化，不能固定为每八小时或承诺一直收钱。"
+        },
+        {
+          "title": "保证金与盯市",
+          "text": "全仓可把同账户抵押品暴露给其他仓位，逐仓按分配保证金管理风险。标记价用于未实现损益和强平判断，最新成交价不能替代它。"
+        },
+        {
+          "title": "对冲仍需管理",
+          "text": "现货加空永续可以减轻方向风险，但仍有基差、资金费、保证金、滑点和场所风险。合约报价库存与现货库存的名义敞口分别计算，冻结资金不可重复承诺。"
+        }
+      ],
+      "discovery": [
+        "合约规格、币种与结算资产、全仓/逐仓及敞口授权是什么？",
+        "对冲还是合约做市？资金费、基差与强平由谁监控和升级？",
+        "抵押品、维持保证金档位、风险限额与追加资金如何审批？"
+      ],
+      "boundary": "不能说现货对冲后永远不会亏损或强平。实验使用独立分配保证金、固定示例 MMR，不复刻交易所完整强平引擎，不给出实盘强平价。",
+      "quiz": [
+        {
+          "prompt": "10 万 USDT 名义空仓，单次正资金费率 0.01%，示例现金流？",
+          "options": [
+            "空方付 10 USDT",
+            "空方收 10 USDT",
+            "取决于服务费报价"
+          ],
+          "correct": 1,
+          "explanation": "示例：100,000 × 0.0001 = 10 USDT，正费率由多方向空方支付；下次费率与方向可能变化。"
+        },
+        {
+          "prompt": "做了现货+空永续，客户问是否就没有风险？",
+          "options": [
+            "是，方向中性等于零风险",
+            "只看现货涨跌即可",
+            "解释基差、资金费、保证金、执行及场所风险"
+          ],
+          "correct": 2,
+          "explanation": "方向敞口减小并不能消除资金和执行风险，空仓还可能被强平。"
+        },
+        {
+          "prompt": "合约强平压力应主要参照哪个价格？",
+          "options": [
+            "标记价并核对保证金规则",
+            "最新成交价截图",
+            "现货买单价"
+          ],
+          "correct": 0,
+          "explanation": "标记价用于未实现损益和强平判断，完整条件还需按对应合约与账户模式确认。"
+        },
+        {
+          "prompt": "客户要把所有抵押品放全仓，BD 应如何回应？",
+          "options": [
+            "保证其他仓位不会受影响",
+            "解释账户风险相互影响，并交风控审核模式和限额",
+            "全仓一定比逐仓安全"
+          ],
+          "correct": 1,
+          "explanation": "全仓和逐仓风险边界不同，须由授权风控评估，不能把全仓讲成无条件安全。"
+        }
+      ],
+      "sources": [
+        {
+          "title": "Binance · Funding Rates",
+          "url": "https://www.binance.com/en-AE/support/faq/detail/360033525031"
+        },
+        {
+          "title": "Binance · Liquidation Protocols",
+          "url": "https://www.binance.com/en/support/faq/detail/360033525271"
+        },
+        {
+          "title": "Binance · Perpetual Futures",
+          "url": "https://academy.binance.com/en/articles/what-are-perpetual-futures-contracts"
+        }
+      ]
+    }
+  ]
+}

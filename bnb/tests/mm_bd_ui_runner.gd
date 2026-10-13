@@ -27,9 +27,9 @@ func click(id:String)->void:
 	if control.get_viewport()!=root:point+=Vector2(control.get_viewport().position)
 	check(control.is_visible_in_tree() and point.y>=0 and point.y<root.size.y,"click target visible: "+id)
 	root.grab_focus()
-	var motion:=InputEventMouseMotion.new();motion.device=991;motion.position=point;motion.global_position=point;root.push_input(motion)
+	var motion:=InputEventMouseMotion.new();motion.device=991;motion.position=point;motion.global_position=point;root.push_input(motion, true)
 	for down in [true,false]:
-		var event:=InputEventMouseButton.new();event.device=991;event.position=point;event.global_position=point;event.button_mask=1 if down else 0;event.button_index=MOUSE_BUTTON_LEFT;event.pressed=down;root.push_input(event);await process_frame
+		var event:=InputEventMouseButton.new();event.device=991;event.position=point;event.global_position=point;event.button_mask=1 if down else 0;event.button_index=MOUSE_BUTTON_LEFT;event.pressed=down;root.push_input(event, true);await process_frame
 	await frames()
 func capture(name:String)->void:
 	game.page_scroll.scroll_vertical=0;await frames(6);await RenderingServer.frame_post_draw

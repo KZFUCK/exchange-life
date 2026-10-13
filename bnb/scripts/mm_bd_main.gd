@@ -1,6 +1,8 @@
 extends Control
 const Model=preload("res://scripts/mm_bd_model.gd")
 const Store=preload("res://scripts/mm_bd_store.gd")
+const Channels=preload("res://scripts/mm_bd_channels.gd")
+const ChannelView=preload("res://scripts/mm_bd_channel_view.gd")
 const Chart=preload("res://scripts/mm_bd_chart.gd")
 const CAST="res://assets/mm_anime/characters_v1.png"
 const BACKGROUND="res://assets/mm_anime/studio_v1.png"
@@ -9,6 +11,8 @@ const MUTED=Color("778097")
 const BLUE=Color("6675cc")
 const TEAL=Color("409c8c")
 var model=Model.new()
+var channels=Channels.new()
+var channel_view:RefCounted
 var store=Store.new()
 var course:Dictionary={}
 var page:String="home"
@@ -26,6 +30,7 @@ var page_scroll:ScrollContainer
 var action_bar:HBoxContainer
 
 func _ready()->void:
+	channel_view=ChannelView.new(self,channels)
 	set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	var boot_message:String=""
 	if course.is_empty():
@@ -59,7 +64,7 @@ func _ready()->void:
 	text(sidebar,"✦",36,Color("b7c4ee"));text(sidebar,"流動性\n研修室",27,Color("ffffff"))
 	text(sidebar,"MARKET MAKER\nACADEMY",11,Color("a3aecf"))
 	space(sidebar,22);text(sidebar,"课程导航",12,Color("a3aecf"))
-	for row in [["研修主页","home"],["继续会谈","continue"],["学习手册","guide"],["训练记录","records"]]:
+	for row in [["研修主页","home"],["继续会谈","continue"],["渠道课程","channels"],["学习手册","guide"],["训练记录","records"]]:
 		var b:Button=btn(sidebar,row[0],navigate.bind(str(row[1])),"nav_"+str(row[1]))
 		b.add_theme_stylebox_override("normal",style(Color("303a59"),Color("303a59"),10));b.add_theme_color_override("font_color",Color("e4e9fb"))
 	var grow:=Control.new();grow.size_flags_vertical=SIZE_EXPAND_FILL;sidebar.add_child(grow)
@@ -126,11 +131,15 @@ func toast(value:String)->void:status_label.text=value
 func navigate(target:String)->void:
 	remember_draft()
 	if target=="guide":guide.popup_centered();return
-	page="home" if target=="home" else ("records" if target=="records" else str(s().phase))
+	page=target if target in ["home","records","channels"] else str(s().phase)
 	if page=="brief":page="home"
 	build()
 func build()->void:
 	clear_page();stage_label.text="01 需求会谈   ›   02 方案与报价   ›   03 客户谈判   ›   04 交付观察   ›   05 带教复盘"
+	if page in ["channels","channel"]:
+		stage_label.text="机制讲解  ›  参数实验  ›  客户情景题  ›  带教复盘 · 渠道课回答自动保存"
+	for entry in [["save","保存会谈","保存"],["load","读取会谈","读取"],["restore","恢复会谈备份","恢复备份"]]:
+		controls[entry[0]].text=entry[1] if page in ["channels","channel"] else entry[2]
 	if page_scroll!=null:page_scroll.scroll_vertical=0
 	match page:
 		"home":build_home()
@@ -140,6 +149,8 @@ func build()->void:
 		"execution":build_execution()
 		"debrief":build_debrief(s())
 		"records":build_records()
+		"channels":channel_view.catalog(content)
+		"channel":channel_view.build()
 
 func build_home()->void:
 	var hero:=PanelContainer.new();hero.custom_minimum_size.y=320;hero.clip_contents=true;content.add_child(hero)
@@ -156,6 +167,7 @@ func build_home()->void:
 		var start:Button=btn(start_row,"开始第一场客户会谈  →",choose_case.bind(0),"hero_start",true);start.custom_minimum_size.x=360
 	portrait(row,0,320)
 	var heading:=HBoxContainer.new();content.add_child(heading);text(heading,"选择你的客户委托",22);text(heading,"3 个案例 · 每案约 10–15 分钟",13,MUTED)
+	btn(content,"渠道研修：Uniswap · 币安 Alpha · 现货 · 合约  →",navigate.bind("channels"),"channels_entry")
 	var cards:=HBoxContainer.new();cards.add_theme_constant_override("separation",14);content.add_child(cards)
 	for i in model.data.cases.size():
 		var c:Dictionary=model.data.cases[i];var card:VBoxContainer=panel(cards)
@@ -321,3 +333,7 @@ func _notification(what:int)->void:
 		get_tree().quit()
 func _unhandled_key_input(event:InputEvent)->void:
 	if event is InputEventKey and event.pressed and event.keycode==KEY_ESCAPE:navigate("home");get_viewport().set_input_as_handled()
+
+func reveal_channel_control(id:String)->void:
+	if is_instance_valid(controls.get(id)):
+		page_scroll.ensure_control_visible(controls[id])
