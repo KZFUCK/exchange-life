@@ -1,0 +1,762 @@
+{
+  "version": 2,
+  "reviewed_at": "2026-10-13",
+  "notice": "虚构客户、预先定义的情景与可编辑教学参数。业务交付需公司 SOP 与实时平台规则审批。",
+  "questions": [
+    {
+      "id": "metrics",
+      "label": "希望用什么指标验收服务？"
+    },
+    {
+      "id": "funding",
+      "label": "客户资金、储备与成本预算是多少？"
+    },
+    {
+      "id": "ownership",
+      "label": "账户、授权、资产权属与退出怎么约定？"
+    },
+    {
+      "id": "budget",
+      "label": "服务费用、期限与采购审批如何？"
+    },
+    {
+      "id": "flow",
+      "label": "重大事件与风险升级条件有哪些？"
+    },
+    {
+      "id": "venues",
+      "label": "版本、场所、合约与执行权限是什么？"
+    }
+  ],
+  "scoring": {
+    "discovery": 20,
+    "proposal": 25,
+    "boundaries": 25,
+    "delivery": 20,
+    "communication": 10
+  },
+  "cases": [
+    {
+      "id": "uni_mandate",
+      "channel": "uniswap",
+      "name": "风铃协议",
+      "subtitle": "Uniswap v3 · 链上流动性委托",
+      "client": "陆悠 · 协议运营负责人",
+      "price": 1.0,
+      "capital": 120000,
+      "budget": 6500,
+      "monthly_cost": 3600,
+      "objective": "把区间、调整权限、gas 和资产报告写进同一份可交付方案。",
+      "intro": "我们想在链上做流动性。能不能用很窄的区间赚手续费，还保证代币价格不会跌？",
+      "facts": {
+        "metrics": "训练池采用基本 v3 集中流动性：初始价格 1 USDT，区间半宽需在 20%–35%。按有效区间、实际资产数量、费用与异常通知验收，不能用 TVL 保证单笔零滑点。",
+        "funding": "总额度 120,000 USDT 等值；至少 20% 为报价资产储备，gas 支出上限 400 USDT。LP 资金与储备不能重复承诺，服务费另付。",
+        "ownership": "客户保留资产权属。区间重设、交换两币配比和撤回头寸均需明确授权；要有成本上限、对账、暂停及退出流程。",
+        "budget": "服务预算 6,500 USDT/月，交付成本示例 3,600。低于成本的报价需按公司审批制度处理，本练习不提供越权审批。",
+        "flow": "六日情景包括出区间、gas 升高和链状态异常。调整只有在权限、资金和成本预算内才能执行；不能保证每次调整都盈利。",
+        "venues": "虚构测试池 FURIN/USDT，指定一条训练链、v3、固定 30 bps 池费率；没有真实合约地址、不发起签名。v4 或 hook 变更须另行审查，不能自动套用此委托。"
+      },
+      "negotiation": [
+        {
+          "prompt": "客户：区间再窄一点，保证我们每月赚 10%，可以吗？",
+          "options": [
+            "保留收益目标，约定尽力交付",
+            "按区间指标交付，收益不承诺",
+            "缩短区间，月末再核对风险"
+          ],
+          "correct": 1,
+          "feedback": "窄区间增加调整需求。报告实际费用、资产变化和成本，不能承诺固定收益。"
+        },
+        {
+          "prompt": "客户：先降价到低于成本，gas 不够也请你们免费补。",
+          "options": [
+            "减免 gas，保持原交付范围",
+            "缩减范围重报，超限先审批",
+            "先接受降价，下期补回费用"
+          ],
+          "correct": 1,
+          "feedback": "价格、服务范围和客户资金上限都须可交付，成本缺口不得由口头承诺填补。"
+        },
+        {
+          "prompt": "客户：链拥堵时也一直调仓，不需要通知我们。",
+          "options": [
+            "约定批量调整，事后统一报告",
+            "暂停并撤回资产，次日再恢复",
+            "授权内调整，异常通知与核查"
+          ],
+          "correct": 2,
+          "feedback": "链状态异常时先核对头寸和交易状态；暂停不代表损益停止。"
+        }
+      ],
+      "events": [
+        {
+          "title": "区间内运行",
+          "price_return": 0.02,
+          "expected": "keep",
+          "volume": 30000,
+          "gas": 40,
+          "outage": false
+        },
+        {
+          "title": "价格上涨：核对当前区间与成本",
+          "price_return": 0.25,
+          "expected": "risk",
+          "volume": 60000,
+          "gas": 50,
+          "outage": false
+        },
+        {
+          "title": "gas 升高，区间仍有效",
+          "price_return": -0.04,
+          "expected": "keep",
+          "volume": 22000,
+          "gas": 220,
+          "outage": false
+        },
+        {
+          "title": "链状态异常",
+          "price_return": 0,
+          "expected": "pause",
+          "volume": 0,
+          "gas": 50,
+          "outage": true
+        },
+        {
+          "title": "价格回落：核对当前区间与成本",
+          "price_return": -0.28,
+          "expected": "risk",
+          "volume": 50000,
+          "gas": 60,
+          "outage": false
+        },
+        {
+          "title": "区间恢复与验收",
+          "price_return": 0.03,
+          "expected": "keep",
+          "volume": 25000,
+          "gas": 40,
+          "outage": false
+        }
+      ],
+      "limits": "基本集中流动性两币数量按价格快照计算；示例费用只在前后均活跃时按固定归属成交量估算，出区间当日不估算过渡期费用。重设含示例 4 bps 交换成本与 gas。暂停不撤出已部署头寸；只冻结新增调整；区间内手续费仍可产生，异常期费用未估算不等于真实费用为零，LP 资产仍随价格变化。不模拟 ticks、MEV、真实 gas 执行或 hooks。",
+      "fields": [
+        [
+          "capital",
+          "客户总资产额度",
+          30000,
+          120000,
+          10000,
+          "USDT"
+        ],
+        [
+          "fee",
+          "月度服务费",
+          2000,
+          12000,
+          100,
+          "USDT"
+        ],
+        [
+          "width_pct",
+          "区间半宽",
+          5,
+          60,
+          1,
+          "%"
+        ],
+        [
+          "reserve_pct",
+          "报价资产储备",
+          10,
+          40,
+          1,
+          "%"
+        ],
+        [
+          "gas_budget",
+          "累计 gas 上限",
+          50,
+          1000,
+          10,
+          "USDT"
+        ]
+      ]
+    },
+    {
+      "id": "alpha_mandate",
+      "channel": "alpha",
+      "name": "琉光计划",
+      "subtitle": "币安 Alpha · 执行质量与客户沟通",
+      "client": "陆悠 · 项目财务负责人",
+      "price": 1.0,
+      "capital": 80000,
+      "budget": 5500,
+      "monthly_cost": 3000,
+      "objective": "区分渠道支持与上市保证，管理委托额度、处理状态和对账。",
+      "intro": "我们已经在 Alpha 展示，想请你们协助执行和流动性观察。能保证下个月上现货、活动积分也达标吗？",
+      "facts": {
+        "metrics": "本委托服务是 Alpha 渠道观察、订单状态核对和客户授权执行沙盘。每笔不超过 8,000 USDT，接收数量容忍度不超过 1%，日额度不超过 15,000。不承诺上市、奖励或虚假交易量。",
+        "funding": "可用资金 80,000 USDT，至少 20% 预留；累计网络成本预算 400 USDT。待确认委托要锁定预算，未确认前不能把资金当成可重复使用。",
+        "ownership": "客户保留账户和资金权属。实际 Alpha 权限、订单可用性及公司操作权限须审核；沙盘以已授权为前提。任何不明订单先查状态，不能擅自重复下单。",
+        "budget": "客户预算 5,500 USDT/月，示例交付成本 3,000。网络费用与服务费分开，不替客户兜底资产损失。",
+        "flow": "有待确认订单、薄流动性、代币身份不一致与网络成本升高。核对最低接收量、到账与失败记录；服务响应不等于保证所有订单成交。 单次网络成本示例上限 50 USDT；超过先暂停并升级审批。",
+        "venues": "确认 Alpha 2.0 与钱包入口及正式现货的差别。本案用通用即时委托模型，不声称可直接控制 Alpha 撮合或拥有做市/API 权限；代币与渠道身份不一致时停止新增委托。"
+      },
+      "negotiation": [
+        {
+          "prompt": "客户：你们收费以后就保证我们进入币安正式现货吧？",
+          "options": [
+            "列入准入协助，保留升级选项",
+            "提供渠道支持，准入由平台定",
+            "补充平台材料，按日程推进"
+          ],
+          "correct": 1,
+          "feedback": "Alpha 不保证正式现货上市。平台准入、活动资格和奖励不属于本委托可承诺的交付。"
+        },
+        {
+          "prompt": "客户：下单失败就把容忍度调到 10%，保证买到。",
+          "options": [
+            "守接收下限，重报或拆小单",
+            "扩大接收偏差，下次再审批",
+            "等价格稳定，沿用先前报价"
+          ],
+          "correct": 0,
+          "feedback": "未获批准不能扩大可接受损失。受保护订单失败也要解释状态和费用。"
+        },
+        {
+          "prompt": "客户：一直显示处理中，你再下几笔试试，不用查账。",
+          "options": [
+            "重试小额单，记录每次状态",
+            "更换执行账户，隔日汇总账",
+            "冻结新增，核对订单和到账"
+          ],
+          "correct": 2,
+          "feedback": "待确认记录占用预算，未核实前不得重复使用或覆盖原记录。"
+        }
+      ],
+      "events": [
+        {
+          "title": "首笔委托进入处理中",
+          "price_return": 0.01,
+          "expected": "keep",
+          "slippage": 0.2,
+          "gas": 3,
+          "pending": true,
+          "confirm": false,
+          "identity": true
+        },
+        {
+          "title": "处理状态尚未确认",
+          "price_return": -0.02,
+          "expected": "pause",
+          "slippage": 0.3,
+          "gas": 4,
+          "pending": false,
+          "confirm": false,
+          "identity": true
+        },
+        {
+          "title": "确认到账后遇到薄池",
+          "price_return": 0.03,
+          "expected": "risk",
+          "slippage": 2.5,
+          "gas": 5,
+          "pending": false,
+          "confirm": true,
+          "identity": true
+        },
+        {
+          "title": "代币身份不一致",
+          "price_return": -0.01,
+          "expected": "pause",
+          "slippage": 0.2,
+          "gas": 3,
+          "pending": false,
+          "confirm": true,
+          "identity": false
+        },
+        {
+          "title": "网络成本异常升高",
+          "price_return": 0.02,
+          "expected": "pause",
+          "slippage": 0.4,
+          "gas": 220,
+          "pending": false,
+          "confirm": true,
+          "identity": true
+        },
+        {
+          "title": "恢复条件核对与验收",
+          "price_return": -0.01,
+          "expected": "keep",
+          "slippage": 0.3,
+          "gas": 4,
+          "pending": false,
+          "confirm": true,
+          "identity": true
+        }
+      ],
+      "limits": "通用客户授权执行示意，不是 Alpha 撮合、API 或扣费算法。以报价数量检查保护阈值；示例交易成本 4 bps 另扣 USDT，尝试时示例 gas 单独支出。待确认金额保留在现金账并计入锁定预算，确认后才记资产成交；不模拟链上钱包、平台真实权限、限价拍卖或 STP 实现。",
+      "fields": [
+        [
+          "capital",
+          "客户总资产额度",
+          30000,
+          80000,
+          10000,
+          "USDT"
+        ],
+        [
+          "fee",
+          "月度服务费",
+          2000,
+          12000,
+          100,
+          "USDT"
+        ],
+        [
+          "max_order",
+          "单笔委托上限",
+          1000,
+          15000,
+          500,
+          "USDT"
+        ],
+        [
+          "daily_limit",
+          "每日委托上限",
+          1000,
+          30000,
+          1000,
+          "USDT"
+        ],
+        [
+          "slippage_pct",
+          "接收数量容忍度",
+          0.1,
+          3,
+          0.1,
+          "%"
+        ],
+        [
+          "reserve_pct",
+          "现金储备比例",
+          10,
+          40,
+          1,
+          "%"
+        ],
+        [
+          "gas_budget",
+          "累计网络成本上限",
+          50,
+          1000,
+          10,
+          "USDT"
+        ]
+      ]
+    },
+    {
+      "id": "perp_mandate",
+      "channel": "futures",
+      "name": "白露资本",
+      "subtitle": "USDT 线性永续 · 报价与库存对冲",
+      "client": "陆悠 · 交易业务负责人",
+      "price": 1.0,
+      "capital": 300000,
+      "budget": 9500,
+      "monthly_cost": 5400,
+      "objective": "同时说明合约报价、库存对冲、实际净敞口与保证金压力。",
+      "intro": "我们要做合约流动性，还会持有项目现货。你们帮忙对冲以后，是不是就没有亏损和强平风险了？",
+      "facts": {
+        "metrics": "一个训练合约，正常双边报价价差 ≤30 bps，每侧深度 ≥10,000 USDT。现货比例 50%–65%，独立分配保证金至少 25%，初始库存对冲率至少 80%；价差与资金敞口分开验收。",
+        "funding": "客户资产额度 300,000 USDT；现货与保证金比例合计最多 90%，留下现金储备。杠杆上限最多 4 倍、示例维持保证金率 0.5%。保证金不能同时用作现货本金。",
+        "ownership": "客户资金归属独立；报价、合约增减仓、暂停、恢复与止损均需授权。暂停新增挂单不会消除已有仓位，必须持续看标记价和剩余敞口。",
+        "budget": "预算 9,500 USDT/月，示例交付成本 5,400。服务费与交易成本、资金费、客户资产损益分开，不出售固定套利收益保证。",
+        "flow": "情景包含价格上涨、资金费翻转与接口故障。每次资金费只代表本训练步的单次结算，不固定真实结算频率。若保证金不足，须降低敞口并升级风控；不能凭空追加客户资金。",
+        "venues": "虚构单账户 USDT 线性永续，固定 MMR 的逐仓式教学账。现货与合约初始同价但后续独立簿成交；未模拟真实交易所全仓、阶梯 MMR、保险基金、币本位或交割规则。"
+      },
+      "negotiation": [
+        {
+          "prompt": "客户：现货加空合约就是零风险，写进合同吧。",
+          "options": [
+            "按净敞口定价，保证方向中性",
+            "列明残余风险，拒绝零风险",
+            "提高保证金，暂缓风险说明"
+          ],
+          "correct": 1,
+          "feedback": "对冲方向敞口不代表消除强平、资金费和场所风险；成交后还需核对净敞口。"
+        },
+        {
+          "prompt": "客户：资金费现在是正的，你保证每期都收钱。",
+          "options": [
+            "逐次按方向结算，无固定收益",
+            "按近期费率给出年化保守值",
+            "先锁定服务费，抵减负费率"
+          ],
+          "correct": 0,
+          "feedback": "资金费方向和频率可能变化。服务商业收入与客户交易资金费分别报告。"
+        },
+        {
+          "prompt": "客户：接口坏了只要撤单，就保证已有仓位也安全。",
+          "options": [
+            "撤销报价后，按日监控余额",
+            "改用现货价，再核对风险值",
+            "停新报价，核仓位和恢复条件"
+          ],
+          "correct": 2,
+          "feedback": "故障中不能假设撤单或平仓成功。已有仓位仍可能盯市亏损和结算资金费。"
+        }
+      ],
+      "events": [
+        {
+          "title": "双边报价启动",
+          "price_return": 0.01,
+          "expected": "keep",
+          "flow": 0.5,
+          "funding_bps": 1,
+          "outage": false,
+          "spot_return": 0.01
+        },
+        {
+          "title": "上涨与保证金压力",
+          "price_return": 0.18,
+          "expected": "risk",
+          "flow": 1.0,
+          "funding_bps": 2,
+          "outage": false,
+          "spot_return": 0.155
+        },
+        {
+          "title": "资金费转负",
+          "price_return": -0.02,
+          "expected": "keep",
+          "flow": -0.6,
+          "funding_bps": -3,
+          "outage": false,
+          "spot_return": -0.005000000000000001
+        },
+        {
+          "title": "交易接口故障",
+          "price_return": 0.06,
+          "expected": "pause",
+          "flow": 0.8,
+          "funding_bps": -2,
+          "outage": true,
+          "spot_return": 0.06
+        },
+        {
+          "title": "再次上涨，降低敞口",
+          "price_return": 0.15,
+          "expected": "risk",
+          "flow": 1.2,
+          "funding_bps": 1,
+          "outage": false,
+          "spot_return": 0.11499999999999999
+        },
+        {
+          "title": "恢复报价与验收",
+          "price_return": -0.04,
+          "expected": "keep",
+          "flow": -0.4,
+          "funding_bps": 1,
+          "outage": false,
+          "spot_return": -0.02
+        }
+      ],
+      "limits": "单仓 USDT 线性永续与现货库存示意：合约成交改变净合约数量，减仓按平均入场价实现损益，资金费按成交后标记名义额单次结算。固定 MMR、示例手续费 4 bps 和压力关闭费 10 bps；触及要求时清除合约仓位并记账，不模拟交易所真实强平引擎或强平价。暂停仅停止新成交，原仓位仍盯市及结算。 本练习使用分别变化的现货价与合约标记价，基差风险仍为简化示例。",
+      "fields": [
+        [
+          "capital",
+          "客户总资产额度",
+          100000,
+          300000,
+          10000,
+          "USDT"
+        ],
+        [
+          "fee",
+          "月度服务费",
+          2000,
+          12000,
+          100,
+          "USDT"
+        ],
+        [
+          "spread",
+          "正常双边价差",
+          10,
+          80,
+          2,
+          "bps"
+        ],
+        [
+          "depth",
+          "每侧合约名义深度",
+          5000,
+          30000,
+          1000,
+          "USDT"
+        ],
+        [
+          "spot_pct",
+          "现货资金比例",
+          40,
+          70,
+          1,
+          "%"
+        ],
+        [
+          "margin_pct",
+          "保证金资金比例",
+          15,
+          40,
+          1,
+          "%"
+        ],
+        [
+          "hedge_pct",
+          "初始现货对冲比例",
+          0,
+          100,
+          5,
+          "%"
+        ],
+        [
+          "leverage_cap",
+          "杠杆上限",
+          1,
+          6,
+          0.5,
+          "倍"
+        ]
+      ]
+    },
+    {
+      "id": "launch",
+      "name": "星见现货委托",
+      "subtitle": "双边订单簿 · 资金与库存",
+      "sector": "TOKEN LAUNCH",
+      "level": "01 / 入门",
+      "client": "陆悠 · 项目负责人",
+      "objective": "把“帮我们把币做好”转成可测量的流动性服务范围。",
+      "intro": "我们下周要上市，大家都很关心价格。你们做市以后，是不是就能让价格稳住？",
+      "price": 1.0,
+      "capital": 100000,
+      "depth": 15000,
+      "max_spread": 30,
+      "budget": 6500,
+      "cost_bps": 4,
+      "monthly_cost": 3200,
+      "objection": "那能不能写进合同：币价不跌，而且每天成交量至少一百万？",
+      "facts": {
+        "metrics": "希望双边报价，正常市场下价差不超过 30 bps，±1% 范围内每侧至少 15,000 USDT；应约定观测窗口和异常市场处理。",
+        "funding": "可提供 100,000 USDT 等值资产，初始为 USDT 与项目代币各半。服务费另行支付，不属于交易本金。",
+        "ownership": "客户保留资产权属。账户权限、授权交易范围、对账和退出返还必须单独约定，不接受 BD 口头兜底收益。",
+        "budget": "月度服务费预算 6,500 USDT，先试运行 30 天；采购负责人会审核服务范围。所有数值都是本案例训练参数。",
+        "flow": "上市首周买卖流不对称，第三个训练日有解锁卖压。预期成交量不等于可保证的交易量。",
+        "venues": "先覆盖一个现货交易场所，客户希望能看到报价覆盖率、异常事件说明及日度报告。"
+      },
+      "venues": 1,
+      "events": [
+        {
+          "title": "平稳启动",
+          "flow": 0.5,
+          "toxic_bps": 1,
+          "outage": false,
+          "price_return": 0.018,
+          "expected": "keep"
+        },
+        {
+          "title": "单边交易流",
+          "flow": -0.7,
+          "toxic_bps": 2,
+          "outage": false,
+          "price_return": -0.012,
+          "expected": "keep"
+        },
+        {
+          "title": "解锁与卖压",
+          "flow": -1.5,
+          "toxic_bps": 12,
+          "outage": false,
+          "price_return": -0.09,
+          "expected": "risk"
+        },
+        {
+          "title": "双边恢复",
+          "flow": 0.8,
+          "toxic_bps": 3,
+          "outage": false,
+          "price_return": 0.025,
+          "expected": "keep"
+        },
+        {
+          "title": "库存再平衡",
+          "flow": -0.4,
+          "toxic_bps": 2,
+          "outage": false,
+          "price_return": -0.01,
+          "expected": "keep"
+        },
+        {
+          "title": "交付复盘",
+          "flow": 0.6,
+          "toxic_bps": 1,
+          "outage": false,
+          "price_return": 0.016,
+          "expected": "keep"
+        }
+      ],
+      "channel": "spot",
+      "limits": "三档订单簿和固定交易流仅用于资金、深度与库存训练。成交使用实际可用现金与代币，计入示例成本；暂停新报价不会撤销已有资产风险。不模拟真实交易所撮合、API 许可、跨所转账或队列优先级。",
+      "fields": [
+        [
+          "capital",
+          "客户交易本金",
+          50000,
+          100000,
+          1000,
+          "USDT"
+        ],
+        [
+          "fee",
+          "月度服务费",
+          2000,
+          12000,
+          100,
+          "USDT"
+        ],
+        [
+          "spread",
+          "正常价差",
+          6,
+          80,
+          1,
+          "bps"
+        ],
+        [
+          "depth",
+          "每场所每侧深度",
+          5000,
+          40000,
+          1000,
+          "USDT"
+        ],
+        [
+          "venues",
+          "场所数量",
+          1,
+          3,
+          1,
+          "家"
+        ]
+      ],
+      "negotiation": [
+        {
+          "prompt": "客户：签约时承诺币价不跌、每天成交百万，可以吗？",
+          "options": [
+            "按历史成交量约定最低收入",
+            "约定真实流动性指标",
+            "以客户资产补足每日成交差额"
+          ],
+          "correct": 1,
+          "feedback": "真实流动性服务不保证币价与虚假交易量；验收应写明价差、双边深度、观测窗口和异常条件。"
+        },
+        {
+          "prompt": "客户：服务费降一半，覆盖三个场所，深度不变。",
+          "options": [
+            "按范围重报并申请审批",
+            "按旧本金扩大三个场所的报价",
+            "维持全部指标，下月核算成本"
+          ],
+          "correct": 0,
+          "feedback": "每场所每侧深度会增加资金占用与交付成本，不能重复承诺同一笔资金。"
+        },
+        {
+          "prompt": "客户：遇到解锁和接口故障仍保持窄价差，不必报告。",
+          "options": [
+            "维持原价差，等待库存自然恢复",
+            "约定限额、异常和通知",
+            "暂停后把已持资产视为零风险"
+          ],
+          "correct": 1,
+          "feedback": "库存及现有资产风险持续存在；须约定调整、暂停、客户通知和恢复检查。"
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Uniswap · Concentrated liquidity",
+      "url": "https://developers.uniswap.org/docs/get-started/concepts/liquidity-providers/concentrated-liquidity"
+    },
+    {
+      "title": "Binance · Alpha 2.0",
+      "url": "https://www.binance.com/en-NG/support/faq/detail/60cc2e54aa32453387523c10254438c1"
+    },
+    {
+      "title": "Binance · Funding rates",
+      "url": "https://www.binance.com/en-AE/support/faq/detail/360033525031"
+    },
+    {
+      "title": "Binance · Liquidation protocols",
+      "url": "https://www.binance.com/en/support/faq/detail/360033525271"
+    }
+  ],
+  "simulation": {
+    "trade_fee_bps": 4,
+    "lp_fee_bps": 30,
+    "alpha_max_gas": 50,
+    "mmr_pct": 0.5,
+    "pressure_close_bps": 10,
+    "quote_buffer": 0.8,
+    "hedge_buffer": 0.65
+  },
+  "training_policy": {
+    "id": "public-example-v2",
+    "status": "example",
+    "notice": "公开示例参数，未获得公司审批；所有结果仅供带教讨论，不能作为正式报价或上岗资格。",
+    "review_items": [
+      "公司产品与服务范围",
+      "报价底线与折扣审批",
+      "Alpha 渠道及账户权限",
+      "风险限额与异常升级责任人",
+      "交付 SLA、报告模板与数据来源"
+    ]
+  },
+  "rubric": {
+    "memo": [
+      "需求和成功指标",
+      "资金归属及授权",
+      "未确认问题及下一步"
+    ],
+    "rationale": [
+      "交付范围及排除项",
+      "报价成本与取舍",
+      "风险限额及审批条件"
+    ],
+    "response": [
+      "回应客户诉求",
+      "说明边界与替代方案",
+      "确认下一步与责任人"
+    ],
+    "notice": [
+      "事实和待确认状态",
+      "客户影响与当前措施",
+      "恢复条件及下次更新时间"
+    ],
+    "handoff": [
+      "方案与授权摘要",
+      "交易风控职责及验收证据",
+      "未决事项与升级联系人"
+    ]
+  },
+  "learning_objectives": [
+    "根据访谈形成可核对的需求纪要，主动标注未知事项",
+    "计算资金、服务费和交易成本，解释方案取舍",
+    "处理客户异议，约定授权和升级边界",
+    "区分委托提交、确认成交与持仓风险，编写异常通知",
+    "提交可追溯的内部交接和逐日复盘，接受带教审核"
+  ]
+}

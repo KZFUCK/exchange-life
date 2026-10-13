@@ -100,7 +100,13 @@ func refresh_lab()->void:
 		"futures":
 			r=model.futures_lab(val("notional"),val("margin"),val("entry"),val("mark"),val("funding"),val("mmr"),-1 if fields.side.selected==0 else 1,val("fee"))
 			lab_output.text="初始杠杆 %.2f 倍\n盯市损益 %.2f USDT\n单次资金费现金流 %+.2f USDT\n示例成本 %.2f USDT\n保证金余额 %.2f USDT\n示例维持要求 %.2f USDT\n\n%s\n\n正现金流为收入，负值为支出。"%[r.initial_leverage,r.pnl,r.funding,r.fee,r.equity,r.maintenance,"触及示例维持要求 · 升级风控" if r.breach else "快照高于示例维持要求，仍需监控"]
+func display_quiz(m:Dictionary)->Array:
+	var labels:Array=JSON.parse_string(FileAccess.get_file_as_string("res://data/mm_bd_channel_labels_v2.json"))
+	var questions:Array=m.quiz.duplicate(true)
+	for i in questions.size():questions[i].options=labels[int(model.state.selected)][i]
+	return questions
 func build_quiz(m:Dictionary)->void:
+	m=m.duplicate(true);m.quiz=display_quiz(m)
 	var run:Dictionary=model.current();var result:Dictionary=model.grade(run)
 	var box:VBoxContainer=host.panel(host.content);host.text(box,"客户情景测验 / %d / %d 题"%[result.answered,result.total],21)
 	host.paragraph(box,"按首次回答记录本轮成绩；每题立即显示带教解释。可重练，旧轮次仍保留。回答自动保存到独立渠道课存档。",13,host.MUTED)
@@ -110,7 +116,9 @@ func build_quiz(m:Dictionary)->void:
 		host.paragraph(box,"你的回答："+q.options[int(run.answers[i])]+"\n带教解释："+q.explanation,14)
 	if not result.complete:
 		var q:Dictionary=m.quiz[result.answered];host.paragraph(box,q.prompt,21)
-		for i in q.options.size():host.btn(box,q.options[i],respond.bind(i),"channel_answer_%d"%i)
+		var offset:int=(int(model.state.selected)+result.answered+model.state.runs.size())%3
+		for j in q.options.size():
+			var i:int=(j+offset)%3;host.btn(box,q.options[i],respond.bind(i),"channel_answer_%d"%i)
 	else:
 		host.text(box,"本轮 %d / 100 · %d / %d 题正确"%[result.score,result.correct,result.total],26,host.BLUE)
 		host.paragraph(box,"完成机制测验。分数供带教讨论；计算实验和情景题不能证明已具备真实交易交付能力。",14)
@@ -127,7 +135,7 @@ func retry()->void:
 	if not error.is_empty():host.toast(error);return
 	host.build();host.toast("已开始新一轮，旧回答仍保留。")
 func export_review()->void:
-	var m:Dictionary=model.data.modules[int(model.state.selected)];var run:Dictionary=model.current();var result:Dictionary=model.grade(run)
+	var m:Dictionary=model.data.modules[int(model.state.selected)].duplicate(true);m.quiz=display_quiz(m);var run:Dictionary=model.current();var result:Dictionary=model.grade(run)
 	var path:String="user://mm_bd_channel_%s_%d.md"%[m.id,Time.get_unix_time_from_system()]
 	var f:=FileAccess.open(path,FileAccess.WRITE)
 	if f==null:host.toast("导出失败。请检查目录权限。");return
@@ -138,5 +146,4 @@ func export_review()->void:
 	f.store_string(copy);f.close();host.toast("渠道复盘已导出："+ProjectSettings.globalize_path(path))
 
 func client_flow(index:int)->void:
-	if index==2:host.choose_case(0)
-	else:host.mandate_view.choose([0,1,0,2][index])
+	host.mandate_view.choose([0,1,3,2][index])

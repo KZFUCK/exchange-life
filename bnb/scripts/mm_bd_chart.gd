@@ -9,6 +9,10 @@ func _draw()->void:
 		var values:Array=[float(state.proposal.get("capital",100000))]
 		for row in state.daily:values.append(float(row.equity))
 		var low:float=float(values.min())*.992;var high:float=float(values.max())*1.008
+		var font:Font=get_theme_default_font()
+		draw_string(font,Vector2(box.position.x,box.position.y+12),"%.0f USDT"%high,HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color("59657e"))
+		draw_string(font,Vector2(box.position.x,box.end.y),"%.0f"%low,HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color("59657e"))
+		for day in [0,3,6]:draw_string(font,Vector2(box.position.x+box.size.x*day/6,box.end.y+17),"D%d"%day,HORIZONTAL_ALIGNMENT_LEFT,-1,11,Color("59657e"))
 		var points:=PackedVector2Array()
 		for i in values.size():points.append(Vector2(box.position.x+box.size.x*i/maxf(6,values.size()-1),box.end.y-(float(values[i])-low)/maxf(high-low,.01)*box.size.y))
 		if points.size()>1:draw_polyline(points,Color("6675cc"),3,true)

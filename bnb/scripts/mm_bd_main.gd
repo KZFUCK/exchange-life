@@ -9,7 +9,7 @@ const Chart=preload("res://scripts/mm_bd_chart.gd")
 const CAST="res://assets/mm_anime/characters_v1.png"
 const BACKGROUND="res://assets/mm_anime/studio_v1.png"
 const INK=Color("28304d")
-const MUTED=Color("778097")
+const MUTED=Color("59657e")
 const BLUE=Color("6675cc")
 const TEAL=Color("409c8c")
 var model=Model.new()
@@ -51,7 +51,7 @@ func _ready()->void:
 	get_tree().auto_accept_quit=false
 	var skin:=Theme.new();var font:=SystemFont.new();font.font_names=PackedStringArray(["PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Microsoft YaHei"])
 	skin.default_font=font;skin.default_font_size=16
-	for type in ["Label","Button","OptionButton","CheckButton","SpinBox","LineEdit"]:skin.set_color("font_color",type,INK)
+	for type in ["Label","Button","OptionButton","CheckButton","SpinBox","LineEdit","TextEdit"]:skin.set_color("font_color",type,INK)
 	for state_name in ["font_hover_color","font_pressed_color","font_focus_color"]:skin.set_color(state_name,"Button",INK)
 	skin.set_color("default_color","RichTextLabel",INK)
 	for type in ["Button","OptionButton"]:
@@ -62,6 +62,10 @@ func _ready()->void:
 		skin.set_color("font_disabled_color",type,MUTED)
 		skin.set_stylebox("focus",type,style(Color(0,0,0,0),BLUE,12))
 	skin.set_stylebox("normal","LineEdit",style(Color("f7f8fc"),Color("e1e4ef"),8))
+	skin.set_stylebox("normal","TextEdit",style(Color("ffffff"),Color("cfd5e6"),8,12))
+	skin.set_stylebox("focus","TextEdit",style(Color(0,0,0,0),BLUE,8,12))
+	skin.set_color("caret_color","TextEdit",BLUE)
+	skin.set_color("selection_color","TextEdit",Color("d8defa"))
 	skin.set_stylebox("panel","AcceptDialog",style(Color("fafbff"),Color("ccd3ec"),16))
 	theme=skin
 	var bg:=ColorRect.new();bg.color=Color("f4f5fa");bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT);bg.mouse_filter=MOUSE_FILTER_IGNORE;add_child(bg)
@@ -92,7 +96,7 @@ func _ready()->void:
 	action_bar=HBoxContainer.new();action_bar.add_theme_constant_override("separation",12);main.add_child(action_bar)
 	status_label=text(main,"准备好与第一位客户见面了吗？",14,TEAL)
 	status_label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
-	text(main,"训练参数 · 虚构客户与资金 · 公司 SOP 可在案例配置中替换",11,MUTED)
+	text(main,"公开示例 · 虚构客户与资金 · 公司 SOP 未校准，书面交付需带教审核",11,MUTED)
 	guide=AcceptDialog.new();guide.title="流动性服务 · 带教手册";guide.size=Vector2i(780,550);guide.theme=theme;guide.ok_button_text="返回研修";add_child(guide)
 	var guide_text:=RichTextLabel.new();guide_text.bbcode_enabled=true;guide_text.set_anchors_and_offsets_preset(PRESET_FULL_RECT);guide_text.offset_left=20;guide_text.offset_top=15;guide_text.offset_right=-20;guide_text.offset_bottom=-50;guide.add_child(guide_text)
 	guide_text.text="[font_size=24]做市服务，先把需求问清楚[/font_size]\n\n[b]1. 双边报价[/b]\n买价 Bid 是愿意买入的价格，卖价 Ask 是愿意卖出的价格。价差 bps = (Ask − Bid) / 中间价 × 10,000。1 bps = 0.01%。\n\n[b]2. 深度与场所[/b]\n本案例深度是每个交易场所、每一侧在中间价 ±1% 内的订单名义金额。总资金不能在多个场所重复承诺。模拟订单簿只有三档，用来观察取舍，不代表真实撮合模型。\n\n[b]3. 商业条款[/b]\n交易资金、资产权属和月度服务费分别约定。问清授权、对账、费用、到期退出和事故联系人。固定服务毛利 = 月度服务费 − 训练交付成本；它和客户资产损益分开。\n\n[b]4. 服务边界[/b]\n不承诺币价、收益、虚假交易量或排名。不接受自成交、非真实挂单来制造活跃度。把价差、双边深度、观测窗口和异常市场条款写清。\n\n[b]5. 模拟与复盘[/b]\n三档报价、固定情景交易流、成本和逆向选择是简化训练估算。库存按市值计量；对冲以中间价和 3 bps 示例成本再平衡。暂停与通知会影响交付指标，已约定的故障免责须另行解释。模型不预测真实交易收益。\n\n[b]6. 参考[/b]\n[url=https://www.coinbase.com/en-de/learn/advanced-trading/what-is-an-order-book]Coinbase · Order book[/url]\n[url=https://www.kraken.com/compliance/market-integrity]Kraken · Market Integrity[/url]\n\n评分只用于本次练习与带教讨论，不作为公司的正式考核结论。"
@@ -177,8 +181,8 @@ func build_home()->void:
 		var start_row:=HBoxContainer.new();intro.add_child(start_row)
 		var start:Button=btn(start_row,"开始第一场客户会谈  →",choose_case.bind(0),"hero_start",true);start.custom_minimum_size.x=360
 	portrait(row,0,320)
-	var heading:=HBoxContainer.new();content.add_child(heading);text(heading,"选择你的客户委托",22);text(heading,"3 个案例 · 每案约 10–15 分钟",13,MUTED)
-	btn(content,"完整客户委托：Uniswap · Alpha · 合约  →",navigate.bind("mandates"),"mandates_entry",true)
+	var heading:=HBoxContainer.new();content.add_child(heading);text(heading,"旧版现货引导演示",22);text(heading,"历史练习保留 · 不用于能力考核",13,MUTED)
+	btn(content,"新版完整研修：Uniswap · Alpha · 现货 · 合约  →",navigate.bind("mandates"),"mandates_entry",true)
 	btn(content,"渠道研修：Uniswap · 币安 Alpha · 现货 · 合约  →",navigate.bind("channels"),"channels_entry")
 	var cards:=HBoxContainer.new();cards.add_theme_constant_override("separation",14);content.add_child(cards)
 	for i in model.data.cases.size():
