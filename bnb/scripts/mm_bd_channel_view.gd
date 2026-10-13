@@ -15,7 +15,8 @@ func catalog(parent:Node)->void:
 		var result:Dictionary=model.grade(model.current(i))
 		host.text(box,"本轮 %d / %d 题 · %s"%[result.answered,result.total,"完成 · %d 分"%result.score if result.complete else "进行中" if result.answered>0 else "尚未开始"],13,host.TEAL)
 		host.btn(box,"进入渠道课  →",open.bind(i),"channel_%d"%i,true)
-	host.paragraph(parent,"现货完整业务流程：研修主页仍保留三个客户案例。其他渠道当前是机制课、计算实验和情景测验，未模拟完整真实交易系统。",13,host.MUTED)
+		host.btn(box,"进入完整客户委托  →",client_flow.bind(i),"channel_client_%d"%i)
+	host.paragraph(parent,"四渠道均有客户业务流程。现货在研修主页；Uniswap、Alpha 与合约在“客户委托”。机制课可先学，再进入情景研修。",13,host.MUTED)
 	if not model.boot_error.is_empty():host.paragraph(parent,model.boot_error,14,Color("ad6073"))
 func open(index:int)->void:
 	var error:String=model.select(index)
@@ -26,6 +27,7 @@ func build()->void:
 	var top:=HBoxContainer.new();host.content.add_child(top);var heading:=VBoxContainer.new();heading.size_flags_horizontal=Control.SIZE_EXPAND_FILL;top.add_child(heading)
 	host.text(heading,m.tag+" / 流動性フィールドノート",11,host.BLUE);host.text(heading,m.title,27);host.paragraph(heading,m.summary,16)
 	host.btn(heading,"返回渠道课程",host.navigate.bind("channels"),"channel_back")
+	host.btn(heading,"进入完整客户委托",client_flow.bind(int(model.state.selected)),"channel_client_start",true)
 	host.portrait(top,0,160)
 	var lessons:=GridContainer.new();lessons.columns=2;lessons.add_theme_constant_override("h_separation",14);lessons.add_theme_constant_override("v_separation",14);host.content.add_child(lessons)
 	for lesson in m.lessons:
@@ -134,3 +136,7 @@ func export_review()->void:
 	copy+="## 服务边界\n\n"+m.boundary+"\n\n## 参考（"+model.data.reviewed_at+" 核对）\n\n"
 	for source in m.sources:copy+="- [%s](%s)\n"%[source.title,source.url]
 	f.store_string(copy);f.close();host.toast("渠道复盘已导出："+ProjectSettings.globalize_path(path))
+
+func client_flow(index:int)->void:
+	if index==2:host.choose_case(0)
+	else:host.mandate_view.choose([0,1,0,2][index])

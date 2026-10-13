@@ -3,6 +3,8 @@ const Model=preload("res://scripts/mm_bd_model.gd")
 const Store=preload("res://scripts/mm_bd_store.gd")
 const Channels=preload("res://scripts/mm_bd_channels.gd")
 const ChannelView=preload("res://scripts/mm_bd_channel_view.gd")
+const MandateStore=preload("res://scripts/mm_bd_mandate_store.gd")
+const MandateView=preload("res://scripts/mm_bd_mandate_view.gd")
 const Chart=preload("res://scripts/mm_bd_chart.gd")
 const CAST="res://assets/mm_anime/characters_v1.png"
 const BACKGROUND="res://assets/mm_anime/studio_v1.png"
@@ -13,6 +15,8 @@ const TEAL=Color("409c8c")
 var model=Model.new()
 var channels=Channels.new()
 var channel_view:RefCounted
+var mandate_store=MandateStore.new()
+var mandate_view:RefCounted
 var store=Store.new()
 var course:Dictionary={}
 var page:String="home"
@@ -31,6 +35,7 @@ var action_bar:HBoxContainer
 
 func _ready()->void:
 	channel_view=ChannelView.new(self,channels)
+	mandate_view=MandateView.new(self,mandate_store)
 	set_anchors_and_offsets_preset(PRESET_FULL_RECT)
 	var boot_message:String=""
 	if course.is_empty():
@@ -40,6 +45,8 @@ func _ready()->void:
 		else:
 			course={"active":model.initial(),"completed":[],"draft":{}}
 			if FileAccess.file_exists(store.path):boot_message=saved.error
+	if not mandate_view.s().commands.is_empty():
+		page="mandate";boot_message="已恢复上次新渠道客户委托。"
 	get_tree().root.gui_embed_subwindows=true
 	get_tree().auto_accept_quit=false
 	var skin:=Theme.new();var font:=SystemFont.new();font.font_names=PackedStringArray(["PingFang SC","Hiragino Sans GB","Noto Sans CJK SC","Microsoft YaHei"])
@@ -60,11 +67,11 @@ func _ready()->void:
 	var bg:=ColorRect.new();bg.color=Color("f4f5fa");bg.set_anchors_and_offsets_preset(PRESET_FULL_RECT);bg.mouse_filter=MOUSE_FILTER_IGNORE;add_child(bg)
 	var layout:=HBoxContainer.new();layout.set_anchors_and_offsets_preset(PRESET_FULL_RECT);layout.add_theme_constant_override("separation",0);add_child(layout)
 	var side:=PanelContainer.new();side.custom_minimum_size.x=190;side.add_theme_stylebox_override("panel",style(Color("242d49"),Color("242d49"),0,22));layout.add_child(side)
-	var sidebar:=VBoxContainer.new();sidebar.add_theme_constant_override("separation",16);side.add_child(sidebar)
+	var sidebar:=VBoxContainer.new();sidebar.add_theme_constant_override("separation",12);side.add_child(sidebar)
 	text(sidebar,"✦",36,Color("b7c4ee"));text(sidebar,"流動性\n研修室",27,Color("ffffff"))
 	text(sidebar,"MARKET MAKER\nACADEMY",11,Color("a3aecf"))
 	space(sidebar,22);text(sidebar,"课程导航",12,Color("a3aecf"))
-	for row in [["研修主页","home"],["继续会谈","continue"],["渠道课程","channels"],["学习手册","guide"],["训练记录","records"]]:
+	for row in [["研修主页","home"],["继续会谈","continue"],["客户委托","mandates"],["渠道课程","channels"],["学习手册","guide"],["训练记录","records"]]:
 		var b:Button=btn(sidebar,row[0],navigate.bind(str(row[1])),"nav_"+str(row[1]))
 		b.add_theme_stylebox_override("normal",style(Color("303a59"),Color("303a59"),10));b.add_theme_color_override("font_color",Color("e4e9fb"))
 	var grow:=Control.new();grow.size_flags_vertical=SIZE_EXPAND_FILL;sidebar.add_child(grow)
@@ -131,7 +138,7 @@ func toast(value:String)->void:status_label.text=value
 func navigate(target:String)->void:
 	remember_draft()
 	if target=="guide":guide.popup_centered();return
-	page=target if target in ["home","records","channels"] else str(s().phase)
+	page=target if target in ["home","records","channels","mandates"] else ("mandate" if page in ["mandate","mandates"] else str(s().phase))
 	if page=="brief":page="home"
 	build()
 func build()->void:
@@ -140,6 +147,8 @@ func build()->void:
 		stage_label.text="机制讲解  ›  参数实验  ›  客户情景题  ›  带教复盘 · 渠道课回答自动保存"
 	for entry in [["save","保存会谈","保存"],["load","读取会谈","读取"],["restore","恢复会谈备份","恢复备份"]]:
 		controls[entry[0]].text=entry[1] if page in ["channels","channel"] else entry[2]
+	if page in ["mandate","mandates"]:
+		controls.save.text="保存委托";controls.load.text="读取委托";controls.restore.text="恢复委托备份"
 	if page_scroll!=null:page_scroll.scroll_vertical=0
 	match page:
 		"home":build_home()
@@ -151,6 +160,8 @@ func build()->void:
 		"records":build_records()
 		"channels":channel_view.catalog(content)
 		"channel":channel_view.build()
+		"mandates":mandate_view.catalog(content)
+		"mandate":mandate_view.build()
 
 func build_home()->void:
 	var hero:=PanelContainer.new();hero.custom_minimum_size.y=320;hero.clip_contents=true;content.add_child(hero)
@@ -167,6 +178,7 @@ func build_home()->void:
 		var start:Button=btn(start_row,"开始第一场客户会谈  →",choose_case.bind(0),"hero_start",true);start.custom_minimum_size.x=360
 	portrait(row,0,320)
 	var heading:=HBoxContainer.new();content.add_child(heading);text(heading,"选择你的客户委托",22);text(heading,"3 个案例 · 每案约 10–15 分钟",13,MUTED)
+	btn(content,"完整客户委托：Uniswap · Alpha · 合约  →",navigate.bind("mandates"),"mandates_entry",true)
 	btn(content,"渠道研修：Uniswap · 币安 Alpha · 现货 · 合约  →",navigate.bind("channels"),"channels_entry")
 	var cards:=HBoxContainer.new();cards.add_theme_constant_override("separation",14);content.add_child(cards)
 	for i in model.data.cases.size():
@@ -213,6 +225,7 @@ func read_form()->Dictionary:
 	for key in ["spread","depth","capital","fee","venues"]:p[key]=form[key].value
 	p.risk=form.risk.selected;return p
 func remember_draft()->void:
+	if mandate_view!=null:mandate_view.remember()
 	if page=="proposal" and not form.is_empty():course.draft=read_form()
 func build_proposal()->void:
 	var c:Dictionary=model.scenario(s());text(content,c.name+" / 方案工坊",25)
@@ -303,15 +316,20 @@ func build_records()->void:
 		text(box,"%s · %d / 100"%[model.scenario(record).name,grade.score],21);paragraph(box,grade.focus,15,MUTED)
 		btn(box,"导出这次复盘",export_report.bind(record),"record_export_%d"%i)
 
+	mandate_view.records(content)
+
 func confirm_action(message:String,callback:Callable)->void:
 	pending=callback;confirmation.dialog_text=message;confirmation.popup_centered()
 func save_course()->void:
+	if page in ["mandate","mandates"]:mandate_view.save();return
 	remember_draft();var error:String=store.write_course(course);toast("研修已保存。旧经营存档保留。" if error.is_empty() else error)
 func load_course()->void:
+	if page in ["mandate","mandates"]:mandate_view.load_saved();return
 	var result:Dictionary=store.read_course()
 	if result.has("error"):toast(result.error);return
 	course=result.course;page=str(s().phase) if s().phase!="brief" else "home";build();toast("研修进度已读取。")
 func restore_course()->void:
+	if page in ["mandate","mandates"]:mandate_view.load_saved(true);return
 	var result:Dictionary=store.restore_backup()
 	if result.has("error"):toast(result.error);return
 	course=result.course;page=str(s().phase) if s().phase!="brief" else "home";build();toast("备份已恢复，原文件已保留。")
@@ -327,6 +345,9 @@ func export_report(state:Dictionary)->void:
 func _notification(what:int)->void:
 	if what==NOTIFICATION_WM_CLOSE_REQUEST:
 		remember_draft();var error:String=store.write_course(course)
+		if not mandate_view.s().commands.is_empty():
+			var mandate_error:String=mandate_store.write_course(mandate_view.course)
+			if not mandate_error.is_empty():error+="\n新渠道委托："+mandate_error
 		if not error.is_empty():
 			toast(error+" 请确认后再退出。")
 			confirm_action(error+"\n保留原存档并退出，不保存本次进度？",func():get_tree().quit());return

@@ -25,7 +25,7 @@ func click(id:String)->void:
 	await frames()
 	var point:Vector2=control.get_global_rect().get_center()
 	if control.get_viewport()!=root:point+=Vector2(control.get_viewport().position)
-	check(control.is_visible_in_tree() and point.y>=0 and point.y<root.size.y,"click target visible: "+id)
+	check(control.is_visible_in_tree() and root.get_visible_rect().has_point(point),"click target visible: "+id)
 	root.grab_focus()
 	var motion:=InputEventMouseMotion.new();motion.device=991;motion.position=point;motion.global_position=point;root.push_input(motion, true)
 	for down in [true,false]:
